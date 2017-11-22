@@ -2,8 +2,6 @@ version: '3'
 services:
     logging:
         container_name: log-server
-        env_file:
-            - .env/app.env
         build: ./logging
         ports:
             - "514:514/udp"
