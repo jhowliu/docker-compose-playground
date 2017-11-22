@@ -1,5 +1,15 @@
 version: '3'
 services:
+    logging:
+        container_name: log-server
+        env_file:
+            - .env/app.env
+        build: ./logging
+        ports:
+            - "514:514/udp"
+        volumes:
+            - ./logging/var/log:/var/log/messages
+
     web:
         # build from Dockerfile
         build: . 
@@ -12,5 +22,20 @@ services:
         # web services enviroment variables
         env_file:
             - .env/app.env
+        logging:
+            driver: "syslog"
+            options:
+                tag: "flask"
+                syslog-facility: "daemon"
+                syslog-address: "udp://localhost:514"
+
     redis:
         image: "redis:alpine"
+        env_file:
+            - .env/app.env
+        logging:
+            driver: "syslog"
+            options:
+                tag: "redis"
+                syslog-facility: "daemon"
+                syslog-address: "udp://localhost:514"
