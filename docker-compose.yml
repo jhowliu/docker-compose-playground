@@ -1,0 +1,16 @@
+version: '3'
+services:
+    web:
+        # build from Dockerfile
+        build: . 
+        # host port: container port
+        ports:
+            - "5555:5000"
+        # mount . on /code, it will update service if you update code in the current folder .
+        volumes:
+            - .:/code
+        # web services enviroment variables
+        env_file:
+            - .env/app.env
+    redis:
+        image: "redis:alpine"
